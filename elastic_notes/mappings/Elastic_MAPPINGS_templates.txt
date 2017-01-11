@@ -1,0 +1,93 @@
+PUT _template/nxlog
+{ 
+    "template" : "nxlog*", "mappings" : {
+        "_default_" : {
+            "properties": { "EventTime": {
+                "type": "date", "format": "YYYY-MM-dd HH:mm:ss"
+                }
+            }
+        }
+    }
+}  
+
+
+ALTERNATE Mappings
+
+PUT _template/nxlog
+{
+"template" : "nxlog*",
+"settings" : {
+"number_of_shards" : 3
+},
+"mappings" : {
+"type1" : {
+"_source" : { "enabled" : false },
+"_timestamp" : {
+"enabled" : true,
+"path" : "EventTime",
+"format" : "yyyy-MM-dd HH:mm:ss"
+}
+}
+}
+}
+PUT my_index
+{
+  "mappings": {
+    "my_type": {
+      "properties": {
+        "ip_addr": {
+          "type": "ip"
+        }
+      }
+
+
+PUT my_index
+{
+  "mappings": {
+    "my_type": {
+      "dynamic_templates": [
+        {
+          "ip_address_jj1": {
+            "match_mapping_type": "string",
+            "match":   "src_ip",
+            "match":   "src_dst",
+            "mapping": {
+              "type": "ip"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+
+    }
+  }
+}
+PUT _template/brologs
+{
+	"template":   "logstash-*",
+	"mappings": {
+		"_default_": {
+			"_all": { 
+				"enabled": false
+	},
+	"dynamic_templates": [
+	{
+		"ips_address_jj1": { 
+			"match_mapping_type": "string",
+			"match": "src_ip",
+			"match": "dst_ip",
+			"mapping": {
+				"type": "ip"
+				}
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

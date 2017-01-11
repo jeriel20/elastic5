@@ -1,0 +1,137 @@
+-=--=-=-=-=-=-=-=-=--=-=-=
+Field data:
+=-=--=-=-=-=-=-=-=-=-=-=-=-=
+indices.fielddata.cache.size: 20% (Default)
+	What does this setting manipulate?
+		-controls how much heap space is allocated to fielddata.
+		 As you are issuing queries, aggregations on analyzed strings will load into fielddata if the field wasn’t previously loaded.
+		 If the resulting fielddata size would exceed the specified size, other values will be evicted in order to make space.
+		By default, this setting is unbounded—Elasticsearch will never evict data from fielddata.
+	With this setting in place, the least recently used fielddata will be evicted to make space for newly loaded data.
+	with the default settings, the fielddata from the old indices is never evicted! fielddata will just keep on growing until you trip the fielddata circuit breaker
+-=--=-=-=-=-=-=-=-=--=-=-=
+Circuit Breaker:
+=-=--=-=-=-=-=-=-=-=-=-=-=-=
+Elasticsearch includes a fielddata circuit breaker that is designed to deal with this situation. 
+The circuit breaker estimates the memory requirements of a query by introspecting the fields involved
+ (their type, cardinality, size, and so forth). It then checks to see whether loading the required fielddata
+ would push the total fielddata size over the configured percentage of the heap.
+
+If the estimated query size is larger than the limit, the circuit breaker is tripped and the 
+query will be aborted and return an exception. This happens before data is loaded, which means
+ that you won’t hit an OutOfMemoryException.
+
+Elasticsearch has a family of circuit breakers, all of which work to ensure that memory limits are not exceeded:
+	indices.breaker.fielddata.limit
+		The fielddata circuit breaker limits the size of fielddata to 60% of the heap, by default.
+	indices.breaker.request.limit
+		The request circuit breaker estimates the size of structures required to complete other parts 
+		of a request, such as creating aggregation buckets, and limits them to 40% of the heap, by default.
+	indices.breaker.total.limit
+		The total circuit breaker wraps the request and fielddata circuit breakers to ensure that the 
+		combination of the two doesn’t use more than 70% of the heap by default.
+
+
+It is important to note that the circuit breaker compares estimated query size against the total heap size, not against 
+the actual amount of heap memory used. This is done for a variety of technical reasons (for example, the heap may look full 
+but is actually just garbage waiting to be collected, which is hard to estimate properly). But as the end user, this means 
+the setting needs to be conservative, since it is comparing against total heap, not free heap.
+
+COMMANDS:
+indices.fielddata.cache.size: 50%
+
+PUT /_cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.fielddata.limit" : "55%" 
+  }
+}
+PUT /_cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.request.limit" : "55%" 
+  }
+}
+PUT /_cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.total.limit" : "65%" 
+  }
+}
+
+indices.fielddata.cache.size: 50%
+indices.breaker.fielddata.limit: 55% 
+indices.breaker.request.limit: 55%
+indices.breaker.total.limit: 60% 
+
+In summary:
+By default the indices.fieldata.cache.size is ubounded (no limit) meaning fieldata will never be evicted from memory
+#################################################################################################
+-=--=-=-=-=-=-=-=-=--=-=-=
+Field data:
+=-=--=-=-=-=-=-=-=-=-=-=-=-=
+indices.fielddata.cache.size: 20% (Default)
+	What does this setting manipulate?
+		-controls how much heap space is allocated to fielddata.
+		 As you are issuing queries, aggregations on analyzed strings will load into fielddata if the field wasn’t previously loaded.
+		 If the resulting fielddata size would exceed the specified size, other values will be evicted in order to make space.
+		By default, this setting is unbounded—Elasticsearch will never evict data from fielddata.
+	With this setting in place, the least recently used fielddata will be evicted to make space for newly loaded data.
+	with the default settings, the fielddata from the old indices is never evicted! fielddata will just keep on growing until you trip the fielddata circuit breaker
+-=--=-=-=-=-=-=-=-=--=-=-=
+Circuit Breaker:
+=-=--=-=-=-=-=-=-=-=-=-=-=-=
+Elasticsearch includes a fielddata circuit breaker that is designed to deal with this situation. 
+The circuit breaker estimates the memory requirements of a query by introspecting the fields involved
+ (their type, cardinality, size, and so forth). It then checks to see whether loading the required fielddata
+ would push the total fielddata size over the configured percentage of the heap.
+
+If the estimated query size is larger than the limit, the circuit breaker is tripped and the 
+query will be aborted and return an exception. This happens before data is loaded, which means
+ that you won’t hit an OutOfMemoryException.
+
+Elasticsearch has a family of circuit breakers, all of which work to ensure that memory limits are not exceeded:
+	indices.breaker.fielddata.limit
+		The fielddata circuit breaker limits the size of fielddata to 60% of the heap, by default.
+	indices.breaker.request.limit
+		The request circuit breaker estimates the size of structures required to complete other parts 
+		of a request, such as creating aggregation buckets, and limits them to 40% of the heap, by default.
+	indices.breaker.total.limit
+		The total circuit breaker wraps the request and fielddata circuit breakers to ensure that the 
+		combination of the two doesn’t use more than 70% of the heap by default.
+
+
+It is important to note that the circuit breaker compares estimated query size against the total heap size, not against 
+the actual amount of heap memory used. This is done for a variety of technical reasons (for example, the heap may look full 
+but is actually just garbage waiting to be collected, which is hard to estimate properly). But as the end user, this means 
+the setting needs to be conservative, since it is comparing against total heap, not free heap.
+
+COMMANDS:
+indices.fielddata.cache.size: 50%
+
+PUT /_cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.fielddata.limit" : "55%" 
+  }
+}
+PUT /_cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.request.limit" : "55%" 
+  }
+}
+PUT /_cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.total.limit" : "65%" 
+  }
+}
+
+indices.fielddata.cache.size: 50%
+indices.breaker.fielddata.limit: 55% 
+indices.breaker.request.limit: 55%
+indices.breaker.total.limit: 60% 
+
+In summary:
+By default the indices.fieldata.cache.size is ubounded (no limit) meaning fieldata will never be evicted from memory

@@ -1,0 +1,265 @@
+GET _cluster/pending_tasks
+GET _refresh
+Get _cluster/health
+GET _cat/thread_pool
+Get _cluster/settings
+Get _cat/indices
+GET _settings
+GET _cat/indices
+GET _cat/shards
+POST _cluster/reroute
+{
+  "commands": [
+    {"allocate_empty_primary": {
+      "index": "logstash-broarchived-2016.11.30",
+      "shard": 1,
+      "node": "node10-DN",
+      "accept_data_loss": true
+    }}
+  ]
+}
+POST _cluster/reroute?retry_failed
+Get _cat/health
+DELETE logstash-wev-2016.10*
+Get _cat/nodes
+GET _template/nxlog
+GET _cat/indices
+GET _nodes/stats
+GET _nodes
+GET _template/logstash
+
+POST /nxlog-2014*/_flush
+POST /nxlog-2014*/_close
+
+POST /nxlog-2015*/_flush
+POST /nxlog-2015*/_close
+
+POST /nxlog-201601*/_flush
+POST /nxlog-201601*/_close
+POST /nxlog-201602*/_flush
+POST /nxlog-201602*/_close
+POST /nxlog-201603*/_flush
+POST /nxlog-201603*/_close
+
+PUT _cluster/settings?master_timeout=120s
+{
+   "transient": {
+     "cluster.routing.allocation.enable": "none"
+   }
+}
+
+PUT _cluster/settings
+{
+   "persistent": {
+     "cluster.routing.allocation.enable": "all"
+   }
+}
+
+Get _refresh
+DELETE logstash-broarchived-2016.12*
+Get _cat/health
+
+POST _flush/synced
+
+GET _cluster/health
+
+PUT _cluster/settings
+{
+   "persistent": {
+     "action.search.shard_count.limit": "7000"
+     }
+}
+PUT _settings
+{
+  "index" :{
+  "number_of_replicas" : 1
+  }
+}
+PUT logstash-broarchived-*/_settings
+{
+  "index" :{
+  "number_of_replicas" : 0
+  }
+}
+
+PUT _cluster/settings
+{
+   "transient": {
+     "cluster.routing.rebalance.enable": "all"
+   }
+}
+PUT _cluster/settings
+{
+   "transient": {
+     "cluster.routing.allocation.allow_rebalance": "indices_all_active"
+   }
+}
+PUT _cluster/settings
+{
+   "transient": {
+     "cluster.routing.allocation.enable": "all"
+   }
+}
+PUT _cluster/settings
+{
+   "transient": {
+     "cluster.routing.allocation.enable": "none"
+   }
+}
+PUT logstash-wev*/_settings
+{
+   "index": {
+     "refresh_interval" : "-1"
+   }
+}
+GET _cluster/health
+GET _settings
+PUT _settings
+{
+   "index": {
+     "auto_expand_replicas" : "false"
+   }
+}
+GET _template/*
+GET _search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+
+PUT _cluster/settings
+{
+   "persistent": {
+     "cluster.routing.allocation.enable": "none"
+   }
+}
+
+Get _refresh
+
+
+Get _cat/health
+
+Get _cat/nodes
+
+PUT _settings
+{
+   "index": {
+     "number_of_replicas": "0"
+   }
+}
+PUT _cluster/settings
+{
+   "transient": {
+     "indices.store.throttle.type": "none"
+   }
+}
+PUT _settings
+{
+   "index": {
+     "refresh_interval": "60s"
+   }
+}
+GET _nodes/stats
+GET _cluster/pending_tasks
+
+
+
+
+
+PUT _cluster/settings
+{
+   "persistent": {
+     "cluster.routing.allocation.enable": "none"
+   }
+}
+
+Get _refresh
+
+Get _cluster/health
+
+Get _cat/health
+
+Get _cat/nodes
+
+PUT _settings
+{
+   "index": {
+     "number_of_replicas": "0"
+   }
+}
+PUT _cluster/settings
+{
+   "transient": {
+     "indices.store.throttle.type": "none"
+   }
+}
+PUT _settings
+{
+   "index": {
+     "refresh_interval": "-1"
+   }
+}
+GET _nodes/stats
+GET _cluster/pending_tasks
+POST _flush/synced
+PUT _settings
+{
+   "index": {
+     "auto_expand_replicas" : "0-all"
+   }
+}
+
+GET _cluster/pending_tasks
+
+Get _cluster/health
+Get _cluster/settings
+Get _cat/indices
+
+Get _cat/health
+
+Get _cat/nodes
+
+GET _nodes/stats
+GET _nodes
+
+PUT _cluster/settings?master_timeout=120s
+{
+   "persistent": {
+     "cluster.routing.allocation.enable": "none"
+   }
+}
+
+PUT _cluster/settings
+{
+   "persistent": {
+     "cluster.routing.allocation.enable": "all"
+   }
+}
+
+Get _refresh
+
+Get _cat/health
+
+POST _flush/synced
+GET _cluster/health
+PUT _cluster/settings
+{
+   "persistent": {
+     "action.search.shard_count.limit": "7000"
+     }
+}
+PUT _settings
+{
+  "index" :{
+  "number_of_replicas" : 1
+  }
+}
+
+
+
+
+
+
+
+

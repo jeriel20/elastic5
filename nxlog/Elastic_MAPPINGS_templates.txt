@@ -1,0 +1,32 @@
+PUT _template/nxlog
+{ 
+    "template" : "nxlog*", "mappings" : {
+        "_default_" : {
+            "properties": { "EventTime": {
+                "type": "date", "format": "YYYY-MM-dd HH:mm:ss"
+                }
+            }
+        }
+    }
+}  
+
+
+ALTERNATE Mappings
+
+PUT _template/nxlog
+{
+"template" : "nxlog*",
+"settings" : {
+"number_of_shards" : 3
+},
+"mappings" : {
+"type1" : {
+"_source" : { "enabled" : false },
+"_timestamp" : {
+"enabled" : true,
+"path" : "EventTime",
+"format" : "yyyy-MM-dd HH:mm:ss"
+}
+}
+}
+}
