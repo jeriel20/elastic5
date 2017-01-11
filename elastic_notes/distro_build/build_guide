@@ -1,0 +1,93 @@
+#Install lubuntu 16.04 LTS (no SWAP) all HDD space on mount point /
+#install the following:
+apt-get install ssh geany  nginx python-pip git curl cifs-utils samba
+
+#STOP Samba until you need it
+systemctl stop nmbd
+systemctl disable nmbd
+systemctl stop smbd
+systemctl disable smbd
+
+#stop unecessary services running by default OS install
+systemctl stop ntp
+systemctl disable ntp
+systemctl stop NetworkManager.service
+systemctl disable NetworkManager.service 
+
+#upgrade pip if necessary
+pip install --upgrade pip
+
+#Install elasticsearch python module
+python-pip install elasticsearch
+
+#disable NGINX until you are going to use it
+systemctl stop nginx
+systectl diable nginx
+
+#install Docker
+apt-get install apt-transport-https ca-certificates
+apt-key adv \
+               --keyserver hkp://ha.pool.sks-keyservers.net:80 \
+               --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+apt-get update
+apt-cache policy docker-engine
+apt-get install linux-image-extra-$(uname -r) linux-image-extra-virtual
+apt-get update
+apt-get install docker-engine
+systemctl start docker
+docker run hello-world
+systemctl stop docker
+
+#Reboot the host
+init 6
+
+#go ahead and follow the build.pdf to install the elastic stack
+#download logstash repos into desired directory In my case /home/rustin/Documents/repositories
+
+#if installing a basic lisence of XPACK then
+---------------------------
+License Update:
+---------------------------
+curl -XPUT -u elastic 'http://localhost:9200/_xpack/license' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+curl -XPUT -u elastic 'http://localhost:9200/_xpack/license?acknowledge=true' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+password is changeme default when you install x-pack
+IF XPACK security is diabled then:
+curl -XPUT 'http://localhost:9200/_xpack/license' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+curl -XPUT 'http://localhost:9200/_xpack/license?acknowledge=true' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+
+If spinning your own distro then
+#step 1
+sudo apt-get install gdebi
+#step 2
+sudo gdebi pinguybuilder_4.3-8_all-beta.deb
+
+#Run this to deconfilt UID conflicts between logstash and casper
+sed -i -e 's@user-uid [0-9]*@user-uid 990@' /usr/share/initramfs-tools/scripts/casper-bottom/25adduser
+
+Run the GUI for pinguy builder and bata bing
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,15 @@
+---------------------------
+Offline install x-pack:
+---------------------------
+wget https://artifacts.elastic.co/downloads/packs/x-pack/x-pack-5.1.1.zip
+bin/elasticsearch-plugin install file:///path/to/file/x-pack-5.1.1.zip
+bin/kibana-plugin install file:///path/to/file/x-pack-5.1.1.zip
+---------------------------
+License Update:
+---------------------------
+curl -XPUT -u elastic 'http://localhost:9200/_xpack/license' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+curl -XPUT -u elastic 'http://localhost:9200/_xpack/license?acknowledge=true' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+password is changeme
+IF XPACK security is diabled then:
+curl -XPUT 'http://localhost:9200/_xpack/license' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
+curl -XPUT 'http://localhost:9200/_xpack/license?acknowledge=true' -d @jeriel-juarbe-a480c9a0-f944-48aa-87bc-a486c935a3d6-v5.json
