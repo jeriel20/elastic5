@@ -1,0 +1,83 @@
+---------------------------------------------
+JSON Commands
+---------------------------------------------
+Go to 10.20.52.159:5601
+click on the wrench icon that says "Dev Tools"
+
+#to check cluster health
+GET _cluster/health
+
+#TO see all you nodes in the cluster (node status)
+GET _cat/nodes
+
+#to see all indices
+GET _cat/indices
+
+#TO delete a index or indexes (wild card applies)
+DELETE nxlog-20161220
+or
+DELETE nxlog-201612*
+
+#to set refresh interval by index
+PUT logstash-netscaler*/_settings
+{
+  "index" : {
+    "refresh_interval" : "-1"
+  }
+}
+
+#TO refresh all available documents (if refresh interval is set to -1 for any index, you must manually refresh in order to see the data in Kibana)
+GET _refresh
+
+# To close an index
+POST logstash-wev*/_close
+
+# to force a flush of data (write to disk)
+POST _flush/synced
+
+#To clear the cache in memory
+POST _cache/clear
+
+#TO modify cluster settigs both persistent or transient settings
+#To enable allocation (indexing data)
+PUT _cluster/settings
+{
+  "transient": {"cluster.routing.allocation.enable" : "all" }
+}
+
+# to stop allocation (THis is the one you use when nodes in the cluster crash)
+PUT _cluster/settings
+{
+  "transient": {"cluster.routing.allocation.enable" : "none" }
+}
+
+#to see settings for all the indexes in the cluster
+GET _settings
+
+#to display memory usage by field name
+GET _nodes/stats/indices/fielddata?fields=*
+GET _stats/fielddata?fields=*
+
+#to see stats about the cache
+GET _stats/request_cache?human
+GET _nodes/stats/indices/request_cache?human
+
+#To tweak the circuit breaker settings that are unbound by default
+PUT _cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.fielddata.limit" : "55%" 
+  }
+}
+PUT _cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.request.limit" : "55%" 
+  }
+}
+PUT _cluster/settings
+{
+  "persistent" : {
+    "indices.breaker.total.limit" : "65%" 
+  }
+}
