@@ -1,0 +1,75 @@
+PUT _template/jjlogstash
+{
+  "template" : "logstash-*",
+  "order": 0,
+  "version" : 50001,
+  "settings" : {
+    "index.refresh_interval" : "30s",
+    "number_of_shards" : 3
+  },
+    "mappings": {
+      "_default_": {
+        "dynamic_templates": [
+          {
+            "message_field": {
+              "path_match": "message",
+              "mapping": {
+                "norms": false,
+                "type": "text"
+              },
+              "match_mapping_type": "string"
+            }
+          },
+          {
+            "string_fields": {
+              "mapping": {
+                "norms": false,
+                "type": "text",
+                "fields": {
+                  "keyword": {
+                    "type": "keyword"
+                  }
+                }
+              },
+              "match_mapping_type": "string",
+              "match": "*"
+            }
+          }
+        ],
+        "_all": {
+          "norms": false,
+          "enabled": true
+        },
+        "properties": {
+          "@timestamp": {
+            "include_in_all": false,
+            "type": "date"
+          },
+	"src_ip": { "type": "ip" },
+	"dst_ip": { "type": "ip" },
+          "geoip": {
+            "dynamic": true,
+            "properties": {
+              "ip": {
+                "type": "ip"
+              },
+              "latitude": {
+                "type": "half_float"
+              },
+              "location": {
+                "type": "geo_point"
+              },
+              "longitude": {
+                "type": "half_float"
+              }
+            }
+          },
+          "@version": {
+            "include_in_all": false,
+            "type": "keyword"
+          }
+        }
+      }
+    },
+    "aliases": {}
+  }
