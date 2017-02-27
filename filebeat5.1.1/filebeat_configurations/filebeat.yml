@@ -50,7 +50,7 @@ filebeat.prospectors:
   
 - input_type: log
   paths:
-   - /nsm/bro/logs/current/http_eth2.log
+   - /nsm/bro/logs/current/http_eth*.log
   document_type: bro_http
   exclude_lines: ['^#']
 
