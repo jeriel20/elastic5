@@ -1,0 +1,27 @@
+tld {
+	source => "message"
+	remove_field => "[tld][subdomain]"
+}
+
+#to get the string length
+ruby {
+	code => "
+	my_string = event['message']
+	event['message_length'] = my_string.length
+}
+
+#Enrichment - string entropy using Logstash
+ruby {
+	code => "
+	s = event['message']
+	event['entropy'] = s.each_char.group_by(&:to_s).\
+	values.map{|x|x.length/s.length.to_f}.\
+	reduce(0){|e,x|e-x*Math.log2(x)}
+}
+
+#geoip 
+
+geoip {
+	source => "dst_ip"
+	fields => ["country_name", "location"]
+}
