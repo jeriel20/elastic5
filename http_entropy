@@ -1,27 +1,33 @@
+# The following fucntion is to take a dns query field and break it down to its sld, tld, subdomain. For example
+# www.google.com will be broken down into tld=com sld=google tld=www subdomain=google.com
+# !!!!You must install the following plugin for this to work in logstash (third party plugin from github)
+# bin/logstash-plugin install logstash-plugin-tld
 tld {
-	source => "message"
+	# My example is grabbing the query field in a BRO DNS LOG (IE: www.google.com) and creating a new fields (second and third level domain)
+	source => "query"
 	remove_field => "[tld][subdomain]"
 }
 
-#to get the string length
+#to get the string length of any field in your data set. In my case BRO DNS log field of query
 ruby {
-	code => "
-	my_string = event['message']
-	event['message_length'] = my_string.length
-	"
+	# My example is grabbing the query field in a BRO DNS LOG (IE: www.google.com)
+	# The .set is creating a new field & the .get is selecting a field that you want to get the string length and feed that into the .set new field
+	code => 'event.set['query_length'], event.get['query'].length'
 }
 
 #Enrichment - string entropy using Logstash
 ruby {
-	code => "
-	s = event['message']
-	event['entropy'] = s.each_char.group_by(&:to_s).\
-	values.map{|x|x.length/s.length.to_f}.\
-	reduce(0){|e,x|e-x*Math.log2(x)}
-	"
+	# This code runs entropy math against a field like a BRO DNS LOG query
+	# This will create a new field called "entropy" with the value for example 3.56467546 
+	# It is recommended to set this value as a scaled_float mapping in elasticsearch. Read the Elasticsearch Docs on Scaled_floats
+	# and scaling factors
+	code => '
+	s = event.get['query']
+	event.set['entropy'], s.each_char.group_by(&:to_s).values.map{|x|x.length/s.length.to_f}.reduce(0){|e,x|e-x*Math.log2(x)}
+	'
 }
 
-#geoip 
+#This below is if you want to use GEOIP fucntion and only use the Country Name and Location field instead of all the fields that GEOIP Creates
 
 geoip {
 	source => "dst_ip"
