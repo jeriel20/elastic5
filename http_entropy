@@ -12,23 +12,22 @@ tld {
 ruby {
 	# My example is grabbing the query field in a BRO DNS LOG (IE: www.google.com)
 	# The .set is creating a new field & the .get is selecting a field that you want to get the string length and feed that into the .set new field
-	code => 'event.set['query_length'], event.get['query'].length'
+	code => 'event.set("query_length", event.get("query").length)'
 }
 
-#Enrichment - string entropy using Logstash
+#Enrichment - string ENTROPY using Logstash
 ruby {
 	# This code runs entropy math against a field like a BRO DNS LOG query
 	# This will create a new field called "entropy" with the value for example 3.56467546 
 	# It is recommended to set this value as a scaled_float mapping in elasticsearch. Read the Elasticsearch Docs on Scaled_floats
 	# and scaling factors
 	code => '
-	s = event.get['query']
-	event.set['entropy'], s.each_char.group_by(&:to_s).values.map{|x|x.length/s.length.to_f}.reduce(0){|e,x|e-x*Math.log2(x)}
+	s = event.get("query")
+	event.set("entropy", s.each_char.group_by(&:to_s).values.map{|x|x.length/s.length.to_f}.reduce(0){|e,x|e-x*Math.log2(x)})
 	'
 }
 
 #This below is if you want to use GEOIP fucntion and only use the Country Name and Location field instead of all the fields that GEOIP Creates
-
 geoip {
 	source => "dst_ip"
 	fields => ["country_name", "location"]
