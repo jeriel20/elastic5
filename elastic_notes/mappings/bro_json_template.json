@@ -4,7 +4,7 @@ PUT _template/jjlogstash
   "order": 0,
   "version" : 50001,
   "settings" : {
-    "index.refresh_interval" : "30s",
+    "index.refresh_interval" : "60s",
     "number_of_shards" : 3
   },
     "mappings": {
@@ -48,6 +48,7 @@ PUT _template/jjlogstash
 	"src_ip": { "type": "ip" },
 	"dst_ip": { "type": "ip" },
 	"entropy": { "type": "scaled_float", "scaling_factor": 100},
+	"entropy_uri": { "type": "scaled_float", "scaling_factor": 100},
           "geoip": {
             "dynamic": true,
             "properties": {
