@@ -38,7 +38,7 @@ source s_bro_socks { file("/nsm/bro/logs/current/socks.log" flags(no-parse) prog
 source s_bro_traceroute { file("/nsm/bro/logs/current/traceroute.log" flags(no-parse) program_override("bro_traceroute")); };
 source s_bro_dark_host { file("/nsm/bro/logs/current/dark_host.log" flags(no-parse) program_override("bro_dark_host")); };
 
-destination logstash {udp("192.168.0.45", port(5514));};
+destination logstash {udp("IP_ADDRESS", port(5514));};
 
 log {
 	source(s_bro_dark_host);
