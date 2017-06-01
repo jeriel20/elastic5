@@ -45,7 +45,7 @@ $first_line = Get-Content .\evtx_files.txt | select -first 1
 
 "<Output es>
 	Module	om_elasticsearch
-	URL		http://10.20.52.141:9200/_bulk
+	URL		http://IP_ADDRESS:PORT/_bulk
 	FlushInterval	2
 	FlushLimit	100
 	# Create an index daily
