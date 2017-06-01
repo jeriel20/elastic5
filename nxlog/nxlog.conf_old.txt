@@ -41,7 +41,7 @@ Query <QueryList>
  
 <Output out>
    Module om_tcp
-   Host 120.40.80.131
+   Host IP_ADDRESS
    Port 5516
 </Output>
  
