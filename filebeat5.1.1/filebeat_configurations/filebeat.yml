@@ -279,7 +279,7 @@ name: filebeat_bro_live1
 
 output.logstash:
 
- hosts: ["10.20.52.157:5044"]
+ hosts: ["IP_ADDRESS:PORT"]
 
  #worker: 10
  
